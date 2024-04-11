@@ -8,5 +8,4 @@ router.post("/signup", signup)
 router.post("/login", login)
 router.post("/post", posts)
 
-
-module.exports = posts;
+module.exports = router

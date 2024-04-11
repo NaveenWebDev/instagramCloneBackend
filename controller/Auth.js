@@ -5,7 +5,6 @@ require("dotenv").config();
 
 const signup = async (req, res)=> {
   const { userName, fullName, email, password, confirmPassword } = req.body;
-
   try {
 
     if(!userName || !fullName || !email || !password || !confirmPassword){
@@ -72,6 +71,7 @@ const signup = async (req, res)=> {
 }
 
 const login = async (req, res)=>{
+
     try{
         const {email, password} = req.body;
 
@@ -104,7 +104,7 @@ const login = async (req, res)=>{
         if(await bcrypt.compare(password, user.password)){
 
             let token = jwt.sign(payload, process.env.JWT_SECRET, {
-                expiresIn:"2h",
+                expiresIn:"10h",
             })
 
             user.password = undefined
