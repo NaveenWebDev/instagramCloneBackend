@@ -51,38 +51,38 @@ exports.imageUpload = async (req, res) => {
     });
 
     // ====================mail send ===========================
-    if (fileData) {
-      async function sendMail(){
-        // create email transporter
-        const transporter = nodemailer.createTransport({
-            service:'gmail',
-            auth:{
-                user:'ns232280@gmail.com',
-                pass:'tsgitjodfcvxolcf'
-            }
-        })
+    // if (fileData) {
+    //   async function sendMail(){
+    //     // create email transporter
+    //     const transporter = nodemailer.createTransport({
+    //         service:'gmail',
+    //         auth:{
+    //             user:'ns232280@gmail.com',
+    //             pass:'tsgitjodfcvxolcf'
+    //         }
+    //     })
     
-        //configure email content.
+    //     //configure email content.
     
-        const mailOption = {
-            from:"naveen@gmail.com",
-            to:'ns222280@gmail.com',
-            subject:'welcom to nodemailer mail',
-            html:`<h1>File successfuly uploaded</h1>`
-        }
+    //     const mailOption = {
+    //         from:"naveen@gmail.com",
+    //         to:'ns222280@gmail.com',
+    //         subject:'welcom to nodemailer mail',
+    //         html:`<h1>File successfuly uploaded</h1>`
+    //     }
     
-        // send email 
+    //     // send email 
     
-        try{
-            const result = await transporter.sendMail(mailOption)
-            console.log("email send successfully");
-        }catch(err){
-            console.log("mail not send");
-        }
+    //     try{
+    //         const result = await transporter.sendMail(mailOption)
+    //         console.log("email send successfully");
+    //     }catch(err){
+    //         console.log("mail not send");
+    //     }
     
-    }
-    sendMail()
-    }
+    // }
+    // sendMail()
+    // }
 
     res.json({
       success: true,
@@ -100,3 +100,19 @@ exports.imageUpload = async (req, res) => {
   }
 };
 
+exports.getProfileData = async (req, res)=>{
+  try{
+    const usersProfile = await filemodel.findAll()
+    console.log(usersProfile)
+    res.json({
+      data:usersProfile,
+      message: "data get successfuly",
+    });
+  }catch(err){
+    console.log(err.message);
+    res.status(400).json({
+      success: false,
+      message: "something went wrong",
+    });
+  }
+}; 
