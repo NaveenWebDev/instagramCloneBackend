@@ -86,9 +86,6 @@ exports.imageUpload = async (req, res) => {
 
     res.json({
       success: true,
-      imageUrl: respone.secure_url,
-      userId,
-      email,
       message: "image successfuly uploaded",
     });
   } catch (err) {
@@ -101,8 +98,13 @@ exports.imageUpload = async (req, res) => {
 };
 
 exports.getProfileData = async (req, res)=>{
+  const {userId} = req.body;
   try{
-    const usersProfile = await filemodel.findAll()
+    const usersProfile = await filemodel.findAll({
+      where:{
+        userId
+      }
+    })
     console.log(usersProfile)
     res.json({
       data:usersProfile,

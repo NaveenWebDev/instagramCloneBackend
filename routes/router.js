@@ -9,5 +9,5 @@ router.post("/signup", signup)
 router.post("/login", login)
 router.post("/post", posts)
 router.post("/imageupload", imageUpload);
-router.get("/updateProfileData", getProfileData)
+router.post("/updateProfileData", getProfileData)
 module.exports = router
