@@ -1,7 +1,11 @@
-const { Op } = require("sequelize");
+const { Op, where,} = require("sequelize");
 const chats = require("../Models/chats");
+const User = require("../Models/loginSchema");
+const sequelize = require("../Config/dbConnect");
+const profileimgs = require("../Models/file")
 
 const chat = async (req, res) =>{
+    try{
     const {userId, receiverId} = req.params;
 
     console.log(userId)
@@ -27,9 +31,19 @@ const chat = async (req, res) =>{
         message:"Data fetched successfully",
         result:mychats
     })
+    }catch(err){
+        return res.status(500).json({
+            success:true,
+            message:err.message,
+        })
+
+    }
+
 }
 
 const createChat = async (req, res) =>{
+    try{
+
     const {userId, chat, receiverId} = req.body;
 
     if(!userId || !chat || !receiverId){
@@ -49,9 +63,66 @@ const createChat = async (req, res) =>{
         success:true,
         message:"Chats saved success",
     })
+
+    }catch(err){
+        return res.status(500).json({
+            success:true,
+            message:err.message,
+        })
+    }
+
+}
+
+const getUserDataForChat = async (req, res)=>{
+    try{
+        const userDta = await User.findAll({
+            attributes:["id","userName","imageUrl"]
+        });
+
+
+        return res.status(200).json({
+            success:true,
+            message:"data fetched successfully",
+            result:{
+                userDta,
+            }
+        })
+
+    }catch(err){
+        return res.status(500).json({
+            success:true,
+            message:err.message,
+        })
+    }
+}
+const getUserDataForChatById = async (req, res)=>{
+    const {id} = req.params;
+    try{
+        const result = await User.findAll({
+            where:{
+                id
+            },
+            attributes:["id","userName","imageUrl"]
+        });
+
+
+        return res.status(200).json({
+            success:true,
+            message:"data fetched successfully",
+            result
+        })
+
+    }catch(err){
+        return res.status(500).json({
+            success:true,
+            message:err.message,
+        })
+    }
 }
 
 module.exports = {
     chat ,
-    createChat
+    createChat,
+    getUserDataForChat,
+    getUserDataForChatById
 }

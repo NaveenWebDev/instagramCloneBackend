@@ -7,7 +7,7 @@ const signup = async (req, res)=> {
   const { userName, fullName, email, password, confirmPassword } = req.body;
   try {
 
-    if(!userName || !fullName || !email || !password || !confirmPassword){
+    if(!userName || !fullName || !email || !password || !confirmPassword ){
         return res.status(400).json({
             success:false,
             message:"all fields are required"
@@ -54,6 +54,7 @@ const signup = async (req, res)=> {
         userName,
         fullName,
         email,
+        imageUrl:`https://api.dicebear.com/5.x/initials/svg?seed=${fullName}`,
         password: hashedPassword
     });
 
@@ -132,5 +133,4 @@ const login = async (req, res)=>{
          });
     }
 }
-
 module.exports = { signup, login };

@@ -1,6 +1,7 @@
 const filemodel = require("../Models/file");
 const cloudnary = require("cloudinary").v2;
 const nodemailer = require("nodemailer");
+const User = require("../Models/loginSchema");
 require("dotenv").config();
 //localfileupload = handler function
 
@@ -44,45 +45,16 @@ exports.imageUpload = async (req, res) => {
     const respone = await uploadFileToCloudinary(file, "naveenCode");
     console.log(respone);
     //save entry on database
-
-    const fileData = await filemodel.create({
-      userId,
+    const updatedData = {
       imageUrl: respone.secure_url,
-    });
+    }
 
-    // ====================mail send ===========================
-    // if (fileData) {
-    //   async function sendMail(){
-    //     // create email transporter
-    //     const transporter = nodemailer.createTransport({
-    //         service:'gmail',
-    //         auth:{
-    //             user:'ns232280@gmail.com',
-    //             pass:'tsgitjodfcvxolcf'
-    //         }
-    //     })
-    
-    //     //configure email content.
-    
-    //     const mailOption = {
-    //         from:"naveen@gmail.com",
-    //         to:'ns222280@gmail.com',
-    //         subject:'welcom to nodemailer mail',
-    //         html:`<h1>File successfuly uploaded</h1>`
-    //     }
-    
-    //     // send email 
-    
-    //     try{
-    //         const result = await transporter.sendMail(mailOption)
-    //         console.log("email send successfully");
-    //     }catch(err){
-    //         console.log("mail not send");
-    //     }
-    
-    // }
-    // sendMail()
-    // }
+
+    const fileData = await User.update(updatedData, {
+      where:{
+        id:userId
+      }
+    });
 
     res.json({
       success: true,
@@ -98,16 +70,17 @@ exports.imageUpload = async (req, res) => {
 };
 
 exports.getProfileData = async (req, res)=>{
-  const {userId} = req.body;
   try{
-    const usersProfile = await filemodel.findAll({
+    const {id} = req.params;
+    const usersProfile = await User.findOne({
       where:{
-        userId
-      }
+        id
+      },
+      attributes:["id", "imageUrl"]
     })
-    console.log(usersProfile)
-    res.json({
-      data:usersProfile,
+    // console.log(usersProfile)
+    res.status(200).json({
+      result:usersProfile,
       message: "data get successfuly",
     });
   }catch(err){
