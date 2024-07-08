@@ -1,33 +1,66 @@
-const UserPost = require("../Models/postSchema")
+const UserPost = require("../Models/postSchema");
+const cloudnary = require("cloudinary").v2;
 
-const posts = async(req, res)=>{
-    try{
-        const {userId, description, imageUrl} = req.body;
+function isFileTypeSupported(type, supportedTypes) {
+  return supportedTypes.includes(type);
+}
+async function uploadFileToCloudinary(file, folder, quality) {
+  const options = { folder };
 
-        if(!userId || !description || !imageUrl){
-            return res.status(400).json({
-                success:false,
-                message:"all fields are required"
-            })
-        }
+  if (quality) {
+    options.quality = quality;
+  }
 
-        const postData = UserPost.create({
-            userId,
-            description,
-            imageUrl
-        })
+  options.resource_type = "auto";
+  return await cloudnary.uploader.upload(file.tempFilePath, options);
+}
 
-        return res.status(201).json({
-            message: 'Post uploaded successfully',
-            postData
-        });
+const posts = async (req, res) => {
+  try {
+    const { userId, description } = req.body;
 
-    }catch(err){
-        res.status(500).json({ 
-            message: 'Error signing up',
-            error:err.message
-        });
+    const file = req.files.imageFile;
+    console.log(file);
+
+    // if (!userId || !description || !file) {
+    //     return res.status(400).json({
+    //       success: false,
+    //       message: "all fields are required",
+    //     });
+    //   }
+
+    //validation
+    const supportedTypes = ["jpg", "jpeg", "png"];
+    const fileType = file.name.split(".")[1].toLowerCase();
+
+    if (!isFileTypeSupported(fileType, supportedTypes)) {
+      return res.status(400).json({
+        success: false,
+        message: "file format not supported",
+      });
     }
-} 
 
-module.exports = posts
+    //is file formate suppported
+
+    const respone = await uploadFileToCloudinary(file, "naveenCode");
+    console.log(respone);
+
+    const postData =await UserPost.create({
+      userId,
+      description,
+      imageUrl: respone.secure_url,
+    });
+
+    return res.status(201).json({
+      message: "Post uploaded successfully",
+      postData,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error while upload",
+      error: err.message,
+    });
+  }
+};
+
+module.exports = posts;
