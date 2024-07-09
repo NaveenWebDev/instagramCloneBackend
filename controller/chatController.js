@@ -114,7 +114,7 @@ const getUserDataForChatById = async (req, res)=>{
 
     }catch(err){
         return res.status(500).json({
-            success:true,
+            success:false,
             message:err.message,
         })
     }

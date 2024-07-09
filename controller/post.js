@@ -1,5 +1,6 @@
 const UserPost = require("../Models/postSchema");
 const cloudnary = require("cloudinary").v2;
+const User = require("../Models/loginSchema");
 
 function isFileTypeSupported(type, supportedTypes) {
   return supportedTypes.includes(type);
@@ -15,10 +16,10 @@ async function uploadFileToCloudinary(file, folder, quality) {
   return await cloudnary.uploader.upload(file.tempFilePath, options);
 }
 
-const posts = async (req, res) => {
+exports.posts = async (req, res) => {
   try {
-    const { userId, description } = req.body;
-
+    const { userId, userName, description } = req.body;
+    console.log(userId , userName, description)
     const file = req.files.imageFile;
     console.log(file);
 
@@ -49,6 +50,7 @@ const posts = async (req, res) => {
       userId,
       description,
       imageUrl: respone.secure_url,
+      userName,
     });
 
     return res.status(201).json({
@@ -56,6 +58,7 @@ const posts = async (req, res) => {
       postData,
     });
   } catch (err) {
+    console.log(err.message)
     res.status(500).json({
       message: "Error while upload",
       error: err.message,
@@ -63,4 +66,26 @@ const posts = async (req, res) => {
   }
 };
 
-module.exports = posts;
+exports.getPost = async (req, res) =>{
+  try{
+
+    const allPostData = await UserPost.findAll({
+      order: [['createdAt', 'DESC']]
+    })
+
+    if(allPostData){
+      return res.status(200).json({
+        success:true,
+        message:"get fetch successfully",
+        result:allPostData,
+      })
+    }
+
+  }catch(err){
+    console.log(err.message);
+    return res.status(500).json({
+      success:false,
+      message:err.message,
+  })
+  }
+};
