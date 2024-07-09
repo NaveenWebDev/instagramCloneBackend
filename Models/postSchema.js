@@ -18,6 +18,10 @@ const UserPost = sequelize.define('UserPost', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  profileImg: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
 });
 
 module.exports = UserPost;

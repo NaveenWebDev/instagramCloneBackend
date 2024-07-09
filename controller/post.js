@@ -18,7 +18,7 @@ async function uploadFileToCloudinary(file, folder, quality) {
 
 exports.posts = async (req, res) => {
   try {
-    const { userId, userName, description } = req.body;
+    const { userId, userName, description, profileImg } = req.body;
     console.log(userId , userName, description)
     const file = req.files.imageFile;
     console.log(file);
@@ -51,6 +51,7 @@ exports.posts = async (req, res) => {
       description,
       imageUrl: respone.secure_url,
       userName,
+      profileImg
     });
 
     return res.status(201).json({
