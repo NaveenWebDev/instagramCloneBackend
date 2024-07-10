@@ -1,6 +1,7 @@
 const UserPost = require("../Models/postSchema");
 const cloudnary = require("cloudinary").v2;
 const User = require("../Models/loginSchema");
+const { where } = require("sequelize");
 
 function isFileTypeSupported(type, supportedTypes) {
   return supportedTypes.includes(type);
@@ -72,6 +73,32 @@ exports.getPost = async (req, res) =>{
 
     const allPostData = await UserPost.findAll({
       order: [['createdAt', 'DESC']]
+    })
+
+    if(allPostData){
+      return res.status(200).json({
+        success:true,
+        message:"get fetch successfully",
+        result:allPostData,
+      })
+    }
+
+  }catch(err){
+    console.log(err.message);
+    return res.status(500).json({
+      success:false,
+      message:err.message,
+  })
+  }
+};
+
+exports.getPostsByPostId = async (req, res) =>{
+  try{
+    const {userId} = req.params;
+
+    const allPostData = await UserPost.findAll({
+      where:{userId},
+      attributes:["userId", "imageUrl"]
     })
 
     if(allPostData){
