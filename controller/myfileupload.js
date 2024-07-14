@@ -2,6 +2,7 @@ const filemodel = require("../Models/file");
 const cloudnary = require("cloudinary").v2;
 const nodemailer = require("nodemailer");
 const User = require("../Models/loginSchema");
+const UserPost = require("../Models/postSchema");
 require("dotenv").config();
 //localfileupload = handler function
 
@@ -48,11 +49,19 @@ exports.imageUpload = async (req, res) => {
     const updatedData = {
       imageUrl: respone.secure_url,
     }
+    const updatedDataprofileImg = {
+      profileImg: respone.secure_url,
+    }
 
 
     const fileData = await User.update(updatedData, {
       where:{
         id:userId
+      }
+    });
+    const fileDataPost = await UserPost.update(updatedDataprofileImg, {
+      where:{
+        userId
       }
     });
 
