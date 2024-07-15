@@ -2,7 +2,7 @@ const UserPost = require("../Models/postSchema");
 const cloudnary = require("cloudinary").v2;
 const User = require("../Models/loginSchema");
 const PostLikes = require("../Models/postLikes");
-const { where } = require("sequelize");
+const { where, Sequelize } = require("sequelize");
 
 function isFileTypeSupported(type, supportedTypes) {
   return supportedTypes.includes(type);
@@ -138,3 +138,41 @@ exports.postLikes = async (req, res)=>{
     })
   }
 }
+
+exports.getLikesCount = async (req, res) => {
+  try {
+    const { postId , userId } = req.params;
+
+    const result = await PostLikes.findAll({
+      attributes: [[Sequelize.fn('COUNT', Sequelize.col('userId')), 'likeCount']],
+      where: {
+        postId: postId
+      }
+    });
+
+    const likeCount = result[0].dataValues.likeCount;
+
+    const likedResult = await PostLikes.findAll({
+      where: {
+        postId: postId,
+        userId: userId
+      }
+    });
+
+
+
+    return res.status(200).json({
+      success: true,
+      result: likeCount,
+      likedResult,
+      message: "like successfully"
+    });
+
+  } catch (error) {
+    console.error('Error fetching like count:', error.name);
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
