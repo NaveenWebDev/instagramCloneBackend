@@ -1,6 +1,7 @@
 const UserPost = require("../Models/postSchema");
 const cloudnary = require("cloudinary").v2;
 const User = require("../Models/loginSchema");
+const PostLikes = require("../Models/postLikes");
 const { where } = require("sequelize");
 
 function isFileTypeSupported(type, supportedTypes) {
@@ -117,3 +118,23 @@ exports.getPostsByPostId = async (req, res) =>{
   })
   }
 };
+
+exports.postLikes = async (req, res)=>{
+  try{
+    const {postId, userId, userName} = req.body;
+    
+    await PostLikes.create({postId, userId, userName})
+
+    return res.status(200).json({
+      success:true,
+      message:"Like successfully"
+    })
+    
+  }catch(err){
+    console.log(err.message);
+    return res.status(500).json({
+      success:false,
+      message:err.message
+    })
+  }
+}
