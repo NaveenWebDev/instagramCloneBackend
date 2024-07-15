@@ -159,13 +159,43 @@ exports.getLikesCount = async (req, res) => {
       }
     });
 
-
-
     return res.status(200).json({
       success: true,
       result: likeCount,
       likedResult,
       message: "like successfully"
+    });
+
+  } catch (error) {
+    console.error('Error fetching like count:', error.name);
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+exports.deletePostLike = async (req, res) => {
+  try {
+    const { postId , userId } = req.params;
+
+    if(!postId || !userId){
+      return res.status(500).json({
+        success:false,
+        message:"all fields are required"
+      })
+    }
+
+    const result = await PostLikes.destroy({
+      where: {
+        postId: postId,
+        userId: userId
+      }
+    });
+
+    return res.status(200).json({
+      success: true,
+      result,
+      message: "unlike successfully"
     });
 
   } catch (error) {

@@ -2,7 +2,7 @@ const express = require("express")
 const router =  express.Router()
 
 const {signup, login} = require("../controller/Auth")
-const {posts, getPost, getPostsByPostId, postLikes, getLikesCount} = require("../controller/post")
+const {posts, getPost, getPostsByPostId, postLikes, getLikesCount, deletePostLike} = require("../controller/post")
 const {imageUpload, getProfileData} = require("../controller/myfileupload")
 const {chat, createChat, getUserDataForChat, getUserDataForChatById } = require("../controller/chatController");
 
@@ -19,5 +19,6 @@ router.get("/chat/userId/:userId/receiverId/:receiverId", chat);
 router.get("/getPostsByPostId/userId=:userId", getPostsByPostId);
 router.post("/postLikes", postLikes);
 router.get("/getLikesCount/:postId/userId/:userId", getLikesCount);
+router.delete("/deletePostLike/:postId/userId/:userId", deletePostLike);
 
 module.exports = router;
