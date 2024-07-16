@@ -3,6 +3,7 @@ const cloudnary = require("cloudinary").v2;
 const User = require("../Models/loginSchema");
 const PostLikes = require("../Models/postLikes");
 const { where, Sequelize } = require("sequelize");
+const PostComment = require("../Models/postComment");
 
 function isFileTypeSupported(type, supportedTypes) {
   return supportedTypes.includes(type);
@@ -73,6 +74,18 @@ exports.getPost = async (req, res) =>{
   try{
 
     const allPostData = await UserPost.findAll({
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(`(
+              SELECT COUNT(postcomments.postId)
+              FROM postcomments
+              WHERE postcomments.postId = UserPost.id
+            )`),
+            'commentCount'
+          ]
+        ]
+      },
       order: [['createdAt', 'DESC']]
     })
 
@@ -206,3 +219,59 @@ exports.deletePostLike = async (req, res) => {
     });
   }
 };
+
+exports.addComment = async (req, res) =>{
+  try{
+    const { postId , userId, comment, profileImg , userName } = req.body;
+
+    if(!postId || !userId || !comment || !userName){
+      return res.status(500).json({
+        success:false,
+        message:"all fields are required"
+      })
+    }
+
+    const result = await PostComment.create({
+      postId,
+      userId,
+      comment,
+      profileImg,
+      userName,
+    })
+
+    return res.status(200).json({
+      success: true,
+      result,
+      message: "comment successfully"
+    });
+
+  }catch(err){
+    console.log(err.message);
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+}
+exports.getComment = async (req, res) =>{
+  try{
+    const { postId} = req.params;
+
+    const result = await PostComment.findAll({
+      where:{postId}
+    })
+
+    return res.status(200).json({
+      success: true,
+      result,
+      message: "comment get successfully"
+    });
+
+  }catch(err){
+    console.log(err.message);
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+}

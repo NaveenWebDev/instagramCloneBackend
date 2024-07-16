@@ -1,10 +1,24 @@
-const express = require("express")
-const router =  express.Router()
+const express = require("express");
+const router = express.Router();
 
-const {signup, login} = require("../controller/Auth")
-const {posts, getPost, getPostsByPostId, postLikes, getLikesCount, deletePostLike} = require("../controller/post")
-const {imageUpload, getProfileData} = require("../controller/myfileupload")
-const {chat, createChat, getUserDataForChat, getUserDataForChatById } = require("../controller/chatController");
+const { signup, login } = require("../controller/Auth");
+const {
+  posts,
+  getPost,
+  getPostsByPostId,
+  postLikes,
+  getLikesCount,
+  deletePostLike,
+  addComment,
+  getComment
+} = require("../controller/post");
+const { imageUpload, getProfileData } = require("../controller/myfileupload");
+const {
+  chat,
+  createChat,
+  getUserDataForChat,
+  getUserDataForChatById,
+} = require("../controller/chatController");
 
 router.post("/signup", signup);
 router.post("/login", login);
@@ -20,5 +34,7 @@ router.get("/getPostsByPostId/userId=:userId", getPostsByPostId);
 router.post("/postLikes", postLikes);
 router.get("/getLikesCount/:postId/userId/:userId", getLikesCount);
 router.delete("/deletePostLike/:postId/userId/:userId", deletePostLike);
+router.post("/addComment", addComment);
+router.get("/getComment/postId/:postId", getComment);
 
 module.exports = router;
