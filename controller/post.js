@@ -275,3 +275,25 @@ exports.getComment = async (req, res) =>{
     });
   }
 }
+exports.deletePost = async (req, res) =>{
+  try{
+    const { postId} = req.params;
+    
+    const result = await UserPost.destroy({
+      where:{id:postId}
+    })
+
+    return res.status(200).json({
+      success: true,
+      result,
+      message: "Post deleted successfully"
+    });
+
+  }catch(err){
+    console.log(err.message);
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+}

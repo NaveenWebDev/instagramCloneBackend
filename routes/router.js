@@ -10,7 +10,8 @@ const {
   getLikesCount,
   deletePostLike,
   addComment,
-  getComment
+  getComment,
+  deletePost,
 } = require("../controller/post");
 const { imageUpload, getProfileData } = require("../controller/myfileupload");
 const {
@@ -36,5 +37,6 @@ router.get("/getLikesCount/:postId/userId/:userId", getLikesCount);
 router.delete("/deletePostLike/:postId/userId/:userId", deletePostLike);
 router.post("/addComment", addComment);
 router.get("/getComment/postId/:postId", getComment);
+router.delete("/deletePost/postId=:postId", deletePost);
 
 module.exports = router;
