@@ -112,7 +112,21 @@ exports.getPostsByPostId = async (req, res) =>{
 
     const allPostData = await UserPost.findAll({
       where:{userId},
-      attributes:["userId", "imageUrl"]
+      attributes:["userId", "imageUrl",
+        [
+          Sequelize.literal(`(
+            SELECT COUNT(postcomments.postId)
+            FROM postcomments
+            WHERE postcomments.postId = UserPost.id
+          )`),
+          'commentCount'
+        ],
+        [Sequelize.literal(`(
+          SELECT COUNT(postlikes.postId)
+          FROM postlikes
+          WHERE postlikes.postId = UserPost.id
+        )`), 'likeCount']
+      ],
     })
 
     if(allPostData){
@@ -278,7 +292,7 @@ exports.getComment = async (req, res) =>{
 exports.deletePost = async (req, res) =>{
   try{
     const { postId} = req.params;
-    
+
     const result = await UserPost.destroy({
       where:{id:postId}
     })

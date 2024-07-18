@@ -22,7 +22,7 @@ const User = sequelize.define('userLogin', {
     type: DataTypes.STRING,
     allowNull:false
   },
-  confirmPassword: {
+  bio: {
     type: DataTypes.STRING,
     allowNull:true
   },

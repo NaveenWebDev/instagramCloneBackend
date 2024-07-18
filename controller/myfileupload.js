@@ -85,7 +85,7 @@ exports.getProfileData = async (req, res)=>{
       where:{
         id
       },
-      attributes:["id", "imageUrl"]
+      attributes:["id", "imageUrl", "fullName", "userName", "bio"]
     })
     // console.log(usersProfile)
     res.status(200).json({
