@@ -3,6 +3,7 @@ const cloudnary = require("cloudinary").v2;
 const nodemailer = require("nodemailer");
 const User = require("../Models/loginSchema");
 const UserPost = require("../Models/postSchema");
+const { Sequelize } = require("sequelize");
 require("dotenv").config();
 //localfileupload = handler function
 
@@ -48,21 +49,20 @@ exports.imageUpload = async (req, res) => {
     //save entry on database
     const updatedData = {
       imageUrl: respone.secure_url,
-    }
+    };
     const updatedDataprofileImg = {
       profileImg: respone.secure_url,
-    }
-
+    };
 
     const fileData = await User.update(updatedData, {
-      where:{
-        id:userId
-      }
+      where: {
+        id: userId,
+      },
     });
     const fileDataPost = await UserPost.update(updatedDataprofileImg, {
-      where:{
-        userId
-      }
+      where: {
+        userId,
+      },
     });
 
     res.json({
@@ -78,25 +78,66 @@ exports.imageUpload = async (req, res) => {
   }
 };
 
-exports.getProfileData = async (req, res)=>{
-  try{
-    const {id} = req.params;
+exports.getProfileData = async (req, res) => {
+  try {
+    const { id , userId } = req.params;
     const usersProfile = await User.findOne({
-      where:{
-        id
+      where: {
+        id,
       },
-      attributes:["id", "imageUrl", "fullName", "userName", "bio"]
-    })
+      attributes: [
+        "id",
+        "imageUrl",
+        "fullName",
+        "userName",
+        "bio",
+        [
+          Sequelize.literal(`(
+SELECT followerId from follows
+WHERE follows.userId = ${userId} AND follows.followerId = ${id} 
+          )`),
+          "isFollow",
+        ],
+        [
+          Sequelize.literal(`(
+            SELECT COUNT(userposts.userId) 
+FROM userposts
+WHERE userposts.userId = ${id}
+          )`),
+          "postCount",
+        ],
+        [
+          Sequelize.literal(`(
+            SELECT COUNT(follows.followerId) 
+FROM follows
+WHERE follows.followerId = ${id}
+          )`),
+          "followerCount",
+        ],
+        [
+          Sequelize.literal(`(
+            SELECT COUNT(follows.followerId) 
+FROM follows
+WHERE follows.userId = ${id}
+          )`),
+          "followingCount",
+        ],
+      ],
+    });
+
+    const postCount = await UserPost.count({
+      where: { userId: id },
+    });
     // console.log(usersProfile)
     res.status(200).json({
-      result:usersProfile,
+      result: usersProfile,
       message: "data get successfuly",
     });
-  }catch(err){
+  } catch (err) {
     console.log(err.message);
     res.status(400).json({
       success: false,
-      message: "something went wrong",
+      message: err.message,
     });
   }
-}; 
+};
