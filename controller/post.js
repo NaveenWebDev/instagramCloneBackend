@@ -2,7 +2,7 @@ const UserPost = require("../Models/postSchema");
 const cloudnary = require("cloudinary").v2;
 const User = require("../Models/loginSchema");
 const PostLikes = require("../Models/postLikes");
-const { where, Sequelize } = require("sequelize");
+const { where, Sequelize, Op } = require("sequelize");
 const PostComment = require("../Models/postComment");
 
 function isFileTypeSupported(type, supportedTypes) {
@@ -305,6 +305,35 @@ exports.deletePost = async (req, res) =>{
 
   }catch(err){
     console.log(err.message);
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+}
+exports.searchUser = async (req, res) =>{
+  try{
+
+    const {userName} = req.params;
+
+    const searchResult = await User.findAll({
+      where:{
+        [Op.or]:[{
+          userName:{
+            [Op.like]: `%${userName}%`
+          }
+        },]
+      },
+      attributes:["id", "userName", "fullName", "imageUrl"]
+    })
+    return res.status(200).json({
+      success:true,
+      message:"Data fetched successfully",
+      result:searchResult
+    })
+
+  }catch(err){
+    console.log(err.message)
     return res.status(500).json({
       success: false,
       message: err.message

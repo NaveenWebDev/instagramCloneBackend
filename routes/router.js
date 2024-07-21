@@ -12,6 +12,7 @@ const {
   addComment,
   getComment,
   deletePost,
+  searchUser,
 } = require("../controller/post");
 const { imageUpload, getProfileData } = require("../controller/myfileupload");
 const {
@@ -24,6 +25,7 @@ const {
 const {
   addFollow, 
   deleteFollow,
+  updateUserProfileData,
 } = require("../controller/followController");
 
 router.post("/signup", signup);
@@ -43,10 +45,12 @@ router.delete("/deletePostLike/:postId/userId/:userId", deletePostLike);
 router.post("/addComment", addComment);
 router.get("/getComment/postId/:postId", getComment);
 router.delete("/deletePost/postId=:postId", deletePost);
+router.get("/searchUser/userName=:userName", searchUser);
 
 // =========================follower & follow routes======================
 
 router.post("/addFollow/userId=:userId/followingId=:followingId", addFollow)
 router.delete("/deleteFollow/userId=:userId/followingId=:followingId", deleteFollow)
+router.patch("/updateUserProfileData", updateUserProfileData)
 
 module.exports = router;
