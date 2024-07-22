@@ -21,10 +21,7 @@ const UserPost = sequelize.define('UserPost', {
   profileImg: {
     type: DataTypes.STRING,
     allowNull: false
-  }
-}, {
-  tableName: 'userposts',
-  underscored: true,
+  },
 });
 
 module.exports = UserPost;
