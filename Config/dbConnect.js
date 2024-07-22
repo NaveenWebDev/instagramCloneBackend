@@ -9,8 +9,7 @@ const dbUser = process.env.DB_USER;
 const sequelize = new Sequelize(dbName, dbUser,  dbPassword, {
   host: hostName,
   dialect:'mysql',
-  logging: false,
-  port: process.env.DB_PORT || 4000
+  port: process.env.DB_PORT || 8000
 });
 
 (async function runSquelize() {

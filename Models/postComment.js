@@ -23,8 +23,7 @@ const postComment = sequelize.define('postComment', {
         allowNull:false
     },
 },{
-    tableName: 'postcomments',
-    underscored: true,
+    tableName: 'postcomments'
 })
 
 module.exports = postComment;
