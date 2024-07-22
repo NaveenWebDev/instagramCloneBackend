@@ -23,7 +23,7 @@ const postComment = sequelize.define('postComment', {
         allowNull:false
     },
 },{
-    tableName: 'userposts',
+    tableName: 'postcomments',
     underscored: true,
 })
 

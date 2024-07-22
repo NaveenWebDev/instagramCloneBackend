@@ -95,6 +95,11 @@ exports.getPost = async (req, res) =>{
         message:"get fetch successfully",
         result:allPostData,
       })
+    }else {
+      return res.status(404).json({
+        success: false,
+        message: "No posts found",
+      });
     }
 
   }catch(err){
