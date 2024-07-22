@@ -48,7 +48,7 @@ server.listen(port, ()=>{
     console.log(`app is running on ${port} number`);
 })
 
-sequelize.sync({alter:false})
+sequelize.sync({alter:true})
    .then(()=>{
         console.log("sync successfull")
     }).catch((err)=>{
