@@ -1,19 +1,25 @@
 const Sequelize = require("sequelize");
 require("dotenv").config()
-const dbName = process.env.DB_NAME;
-const hostName = process.env.HOST_NAME;
-const dbPassword = process.env.DB_PASSWORD;
 
-const sequelize = new Sequelize(dbName, hostName, dbPassword, {
-    host: process.env.HOST,
-    dialect:'mysql'
+const dbName = process.env.DB_NAME;
+const hostName = process.env.DB_HOST;
+const dbPassword = process.env.DB_PASSWORD;
+const dbUser = process.env.DB_USER;
+
+const sequelize = new Sequelize(dbName, dbUser,  dbPassword, {
+  host: hostName,
+  dialect:'mysql',
+  logging: false,
+  port: process.env.DB_PORT || 4000
 });
 
-try {
-    sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+(async function runSquelize() {
+  try {
+    await sequelize.authenticate();
+    console.log("Sequelize Connection Has Been Established Successfully.");
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
-}
+    console.log("Unable to connect to the database:", error);
+  }
+})();
 
 module.exports = sequelize;
