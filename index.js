@@ -28,7 +28,7 @@ app.use(fileupload({
 app.use('/api/v1', router)
 
 io.on("connection", (socket)=>{
-    console.log("userConnted id is =", socket.id);
+    console.log("userConnected id is =", socket.id);
 
     //message for chat
     socket.on("message", (data)=>{
@@ -48,7 +48,7 @@ server.listen(port, ()=>{
     console.log(`app is running on ${port} number`);
 })
 
-sequelize.sync({alter:true})
+sequelize.sync({alter:false})
    .then(()=>{
         console.log("sync successfull")
     }).catch((err)=>{
