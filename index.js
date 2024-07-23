@@ -41,10 +41,8 @@ io.on("connection", (socket)=>{
     });
 })
 
+const port = process.env.PORT || 8000
 
-const port = process.env.DB_PORT || 8000
-
-app.get("/", (req, res) => res.send("Express on Vercel"));
 
 server.listen(port, ()=>{
     console.log(`app is running on ${port} number`);
