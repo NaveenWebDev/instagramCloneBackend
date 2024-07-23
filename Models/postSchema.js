@@ -23,7 +23,7 @@ const UserPost = sequelize.define('UserPost', {
     allowNull: false
   },
 },{
-  tableName:'userpost'
+  tableName:'userposts'
 });
 
 module.exports = UserPost;

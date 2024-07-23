@@ -14,6 +14,8 @@ const postLikes = sequelize.define('postLikes', {
         type:DataTypes.STRING,
         allowNull:false
     }
+},{
+    tableName: "postlikes"
 });
 
 module.exports = postLikes;
